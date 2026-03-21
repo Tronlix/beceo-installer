@@ -8,6 +8,7 @@ on:
       - '**.ps1'
       - '**.bat'
       - '*.tgz'
+      - '.github/workflows/build-installer.yml'
   workflow_dispatch:
 
 jobs:
