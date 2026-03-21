@@ -32,3 +32,27 @@ jobs:
           name: BeCEO-Setup
           path: output/*.exe
           retention-days: 30
+
+      - name: Get version from .iss
+        id: version
+        shell: pwsh
+        run: |
+          $version = (Select-String -Path BeCEO-Setup.iss -Pattern '#define AppVersion "(.+)"').Matches.Groups[1].Value
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: BeCEO v${{ steps.version.outputs.version }}
+          body: |
+            ## BeCEO Windows 安裝程式
+
+            下載 `BeCEO-Setup-*.exe` 並雙擊安裝即可。
+
+            **安裝程式會自動：**
+            - 安裝 Node.js v22（若尚未安裝）
+            - 安裝 BeCEO
+            - 執行初始設定精靈
+          files: output/*.exe
+          make_latest: true
