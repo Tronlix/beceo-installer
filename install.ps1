@@ -139,10 +139,10 @@ Write-Host ""
 Start-Sleep -Seconds 2
 
 try {
-    # Launch beceo setup in a new window so this installer window can close independently
-    Start-Process "cmd" -ArgumentList "/k beceo setup"
+    # Launch GUI setup wizard (no CMD window)
+    Start-Process "powershell" -ArgumentList "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptDir\setup-gui.ps1`"" -Wait
 } catch {
-    Write-Host "   [WARN] Setup could not run. You can run it manually later with: beceo setup" -ForegroundColor Yellow
+    warn "Setup could not run. You can run it manually later with: beceo setup"
 }
 
 Write-Host ""
