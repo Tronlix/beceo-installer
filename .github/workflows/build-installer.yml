@@ -50,13 +50,16 @@ jobs:
           tag_name: v${{ steps.version.outputs.version }}
           name: BeCEO v${{ steps.version.outputs.version }}
           body: |
-            ## BeCEO Windows 安裝程式
+            ## BeCEO Windows Installer
 
-            下載 `BeCEO-Setup-*.exe` 並雙擊安裝即可。
+            Download `BeCEO-Setup-*.exe` and double-click to install.
 
-            **安裝程式會自動：**
-            - 安裝 Node.js v22（若尚未安裝）
-            - 安裝 BeCEO
-            - 執行初始設定精靈
+            **The installer will automatically:**
+            - Install Node.js v22 (if not already installed)
+            - Install BeCEO
+            - Launch the initial setup wizard
+
+            > **Note:** Windows may show an "Unknown Publisher" warning.
+            > Click **More info → Run anyway** to proceed.
           files: output/*.exe
           make_latest: true
