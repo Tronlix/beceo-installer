@@ -3,7 +3,7 @@
 
 #define AppName "BeCEO"
 #define AppVersion "1.0.0-Beta"
-#define AppPublisher "BeCEO Team"
+#define AppPublisher "BeCEO.ai"
 #define AppURL "https://github.com/your-org/beceo"
 
 [Setup]
