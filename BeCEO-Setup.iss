@@ -16,6 +16,7 @@ DefaultDirName={autopf}\{#AppName}
 DefaultGroupName={#AppName}
 OutputDir=.\output
 OutputBaseFilename=BeCEO-Setup-{#AppVersion}
+SetupIconFile=beceo.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -31,6 +32,8 @@ Source: "beceo-V1Beta.tgz"; DestDir: "{tmp}"; Flags: deleteafterinstall
 Source: "install.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
 ; Silent launcher (stays in app folder)
 Source: "start-beceo.bat"; DestDir: "{app}"
+; Icon
+Source: "beceo.ico"; DestDir: "{app}"
 ; Uninstall data removal script (stays in app folder)
 Source: "uninstall-data.ps1"; DestDir: "{app}"
 
@@ -44,9 +47,9 @@ Filename: "powershell.exe"; \
 
 [Icons]
 ; Desktop shortcut - launches via bat
-Name: "{autodesktop}\BeCEO"; Filename: "{app}\start-beceo.bat"
+Name: "{autodesktop}\BeCEO"; Filename: "{app}\start-beceo.bat"; IconFilename: "{app}\beceo.ico"
 ; Start menu
-Name: "{group}\BeCEO"; Filename: "{app}\start-beceo.bat"
+Name: "{group}\BeCEO"; Filename: "{app}\start-beceo.bat"; IconFilename: "{app}\beceo.ico"
 Name: "{group}\BeCEO Setup"; Filename: "{cmd}"; Parameters: "/k beceo setup"
 Name: "{group}\Uninstall BeCEO"; Filename: "{uninstallexe}"
 
