@@ -75,19 +75,16 @@ if (-not $nodeInstalled) {
 
 # Step 3: Install BeCEO
 Write-Step "Step 3: Installing BeCEO"
-try {
-    Write-Host "   Running npm install (this may take a few minutes)..." -ForegroundColor Yellow
-    & npm install -g $tgzPath 2>&1 | Tee-Object -Variable npmOutput
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host ""
-        Write-Host "   npm output:" -ForegroundColor Gray
-        $npmOutput | ForEach-Object { Write-Host "   $_" -ForegroundColor Gray }
-        Write-Fail "npm install failed (exit code $LASTEXITCODE). See output above for details."
-    }
-    Write-OK "BeCEO installed successfully"
-} catch {
-    Write-Fail "Installation failed: $_"
+Write-Host "   Running npm install (this may take a few minutes)..." -ForegroundColor Yellow
+$ErrorActionPreference = "Continue"
+& npm install -g $tgzPath
+$npmExitCode = $LASTEXITCODE
+$ErrorActionPreference = "Stop"
+if ($npmExitCode -ne 0) {
+    Write-Fail "npm install failed (exit code $npmExitCode). Please check your Node.js installation or network connection."
 }
+Write-OK "BeCEO installed successfully"
+
 
 # Step 4: Initial setup
 Write-Step "Step 4: Initial Setup"
