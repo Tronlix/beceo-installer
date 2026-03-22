@@ -1,6 +1,12 @@
 # BeCEO Windows Installer
 # Right-click -> Run with PowerShell (as Administrator)
 
+# Force UTF-8 to prevent garbled characters on Chinese Windows
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+[Console]::InputEncoding = [System.Text.Encoding]::UTF8
+$env:PYTHONUTF8 = "1"
+chcp 65001 | Out-Null
+
 $ErrorActionPreference = "Stop"
 $NODE_VERSION = "22.14.0"
 $BECEO_TGZ = "beceo-V1Beta.tgz"

@@ -1,6 +1,9 @@
 @echo off
 title BeCEO
 
+:: Force UTF-8 encoding to prevent garbled characters
+chcp 65001 >nul
+
 :: Step 1: Clear any stuck Task Scheduler entry
 schtasks /Delete /F /TN "OpenClaw Gateway" >nul 2>&1
 
