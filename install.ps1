@@ -87,8 +87,38 @@ if (-not $nodeInstalled) {
     }
 }
 
-# Step 3: Install BeCEO
-Write-Step "Step 3: Installing BeCEO"
+# Step 3: Check Git
+Write-Step "Step 3: Checking Git"
+$gitInstalled = $false
+try {
+    $gitVer = git --version 2>$null
+    if ($gitVer -match "git version") {
+        Write-OK "Git is already installed ($gitVer)"
+        $gitInstalled = $true
+    }
+} catch {}
+
+if (-not $gitInstalled) {
+    Write-Host "   Downloading Git..." -ForegroundColor Yellow
+    $gitUrl = "https://github.com/git-for-windows/git/releases/download/v2.47.1.windows.1/Git-2.47.1-64-bit.exe"
+    $gitPath = "$env:TEMP\git-setup.exe"
+    try {
+        Invoke-WebRequest -Uri $gitUrl -OutFile $gitPath -UseBasicParsing
+        Write-Host "   Installing Git (please wait)..." -ForegroundColor Yellow
+        Start-Process $gitPath -ArgumentList "/VERYSILENT /NORESTART" -Wait
+
+        $machinePath = [System.Environment]::GetEnvironmentVariable('Path', 'Machine')
+        $userPath = [System.Environment]::GetEnvironmentVariable('Path', 'User')
+        $env:Path = $machinePath + ';' + $userPath
+
+        Write-OK "Git installed successfully"
+    } catch {
+        Write-Fail "Failed to download Git. Please install manually from https://git-scm.com"
+    }
+}
+
+# Step 4: Install BeCEO
+Write-Step "Step 4: Installing BeCEO"
 Write-Host "   Running npm install (this may take a few minutes)..." -ForegroundColor Yellow
 $ErrorActionPreference = "Continue"
 & npm install -g $tgzPath
@@ -101,7 +131,7 @@ Write-OK "BeCEO installed successfully"
 
 
 # Step 4: Initial setup
-Write-Step "Step 4: Initial Setup"
+Write-Step "Step 5: Initial Setup"
 Write-Host ""
 Write-Host "   Starting BeCEO setup wizard..." -ForegroundColor Yellow
 Write-Host "   Please follow the prompts to complete your configuration." -ForegroundColor Yellow
