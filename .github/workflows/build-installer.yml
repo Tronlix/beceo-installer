@@ -1,4 +1,4 @@
-name: Build Windows Installer
+name: Build Installers
 
 on:
   push:
@@ -7,6 +7,8 @@ on:
       - '**.iss'
       - '**.ps1'
       - '**.bat'
+      - '**.command'
+      - '**.sh'
       - '*.tgz'
       - '.github/workflows/build-installer.yml'
   workflow_dispatch:
@@ -15,9 +17,8 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,10 +31,10 @@ jobs:
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" BeCEO-Setup.iss
         shell: pwsh
 
-      - name: Upload installer artifact
+      - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: BeCEO-Setup
+          name: BeCEO-Setup-Windows
           path: output/*.exe
           retention-days: 30
 
@@ -44,22 +45,73 @@ jobs:
           $version = (Select-String -Path BeCEO-Setup.iss -Pattern '#define AppVersion "(.+)"').Matches.Groups[1].Value
           echo "version=$version" >> $env:GITHUB_OUTPUT
 
+      - name: Store version
+        run: echo "${{ steps.version.outputs.version }}" > version.txt
+
+      - name: Upload version artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: version
+          path: version.txt
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build DMG
+        run: |
+          chmod +x mac/build-dmg.sh
+          chmod +x mac/install.command
+          ./mac/build-dmg.sh
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BeCEO-Setup-macOS
+          path: output/*.dmg
+          retention-days: 30
+
+  release:
+    needs: [build-windows, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Get version
+        id: version
+        run: echo "version=$(cat artifacts/version/version.txt)" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
           name: BeCEO v${{ steps.version.outputs.version }}
           body: |
-            ## BeCEO Windows Installer
+            ## BeCEO Installer
 
+            ### Windows
             Download `BeCEO-Setup-*.exe` and double-click to install.
+
+            ### macOS
+            Download `BeCEO-*.dmg`, open it, and double-click **Install BeCEO.command**.
+
+            > **Windows:** May show "Unknown Publisher" warning — click **More info → Run anyway**.
+            > **macOS:** May show "unidentified developer" warning — right-click → **Open** to proceed.
 
             **The installer will automatically:**
             - Install Node.js v22 (if not already installed)
+            - Install Git (if not already installed)
             - Install BeCEO
             - Launch the initial setup wizard
-
-            > **Note:** Windows may show an "Unknown Publisher" warning.
-            > Click **More info → Run anyway** to proceed.
-          files: output/*.exe
+          files: |
+            artifacts/BeCEO-Setup-Windows/*.exe
+            artifacts/BeCEO-Setup-macOS/*.dmg
           make_latest: true
