@@ -4,6 +4,14 @@ title BeCEO
 :: Force UTF-8 encoding to prevent garbled characters
 chcp 65001 >nul
 
+:: Check for admin privileges, auto-elevate if needed
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+    echo Requesting administrator privileges...
+    powershell -Command "Start-Process '%~f0' -Verb RunAs"
+    exit /b
+)
+
 :: Step 1: Clear any stuck Task Scheduler entry
 schtasks /Delete /F /TN "OpenClaw Gateway" >nul 2>&1
 

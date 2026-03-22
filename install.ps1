@@ -7,6 +7,14 @@
 $env:PYTHONUTF8 = "1"
 chcp 65001 | Out-Null
 
+# Check for admin privileges
+$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $isAdmin) {
+    Write-Host "  Requesting administrator privileges..." -ForegroundColor Yellow
+    Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    exit
+}
+
 $ErrorActionPreference = "Stop"
 $NODE_VERSION = "22.14.0"
 $BECEO_TGZ = "beceo-V1Beta.tgz"
