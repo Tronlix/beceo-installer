@@ -42,12 +42,19 @@ Source: "beceo.ico"; DestDir: "{app}"
 Source: "uninstall-data.ps1"; DestDir: "{app}"
 
 [Run]
-; Run PowerShell installer silently in background
+; Step 1: Run PowerShell installer silently in background
 Filename: "powershell.exe"; \
     Parameters: "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""{tmp}\install.ps1"""; \
     WorkingDir: "{tmp}"; \
     StatusMsg: "Installing BeCEO..."; \
     Flags: waituntilterminated runhidden
+
+; Step 2: Launch GUI setup wizard (visible, separate process)
+Filename: "powershell.exe"; \
+    Parameters: "-ExecutionPolicy Bypass -File ""{app}\setup-gui.ps1"""; \
+    WorkingDir: "{app}"; \
+    StatusMsg: "Running setup wizard..."; \
+    Flags: waituntilterminated
 
 [Icons]
 ; Desktop shortcut - launches via bat

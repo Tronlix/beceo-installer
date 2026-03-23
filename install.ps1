@@ -129,27 +129,9 @@ if ($npmExitCode -ne 0) {
 }
 Write-OK "BeCEO installed successfully"
 
-
-# Step 4: Initial setup
-Write-Step "Step 5: Initial Setup"
-Write-Host ""
-Write-Host "   Starting BeCEO setup wizard..." -ForegroundColor Yellow
-Write-Host "   Please follow the prompts to complete your configuration." -ForegroundColor Yellow
-Write-Host ""
-Start-Sleep -Seconds 2
-
-try {
-    # Launch GUI setup wizard (visible window)
-    $setupGui = Join-Path $scriptDir "setup-gui.ps1"
-    Start-Process "powershell" -ArgumentList "-ExecutionPolicy Bypass -File `"$setupGui`"" -Wait
-} catch {
-    warn "Setup could not run. You can run it manually later with: beceo setup"
-}
-
 Write-Host ""
 Write-Host "  +==================================+" -ForegroundColor Green
 Write-Host "  |   Installation Complete!         |" -ForegroundColor Green
-Write-Host "  |                                  |" -ForegroundColor Green
 Write-Host "  +==================================+" -ForegroundColor Green
 Write-Host ""
 Start-Sleep -Seconds 2
