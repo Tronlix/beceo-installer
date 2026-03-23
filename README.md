@@ -1,6 +1,19 @@
-# BeCEO Windows Installer
+# BeCEO Installer
 
-One-click Windows installer for BeCEO — automatically installs Node.js, BeCEO, and runs the setup wizard.
+One-click installer for BeCEO on Windows and macOS.
+
+## Installation
+
+### Windows
+Download `BeCEO-Setup-*.exe` from [Releases](https://github.com/Tronlix/beceo-installer/releases) and double-click to install.
+
+### macOS
+Open Terminal and run:
+```bash
+curl -fsSL https://raw.githubusercontent.com/Tronlix/beceo-installer/main/mac/install.sh -o /tmp/beceo-install.sh && bash /tmp/beceo-install.sh
+```
+
+---
 
 ## Files
 

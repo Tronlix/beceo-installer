@@ -103,7 +103,7 @@ jobs:
             ### macOS
             Open Terminal and run:
             ```bash
-            curl -fsSL https://raw.githubusercontent.com/Tronlix/beceo-installer/main/mac/install.sh | bash
+            curl -fsSL https://raw.githubusercontent.com/Tronlix/beceo-installer/main/mac/install.sh -o /tmp/beceo-install.sh && bash /tmp/beceo-install.sh
             ```
 
             > **Windows:** May show "Unknown Publisher" warning — click **More info → Run anyway**.
