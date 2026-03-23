@@ -30,30 +30,19 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "beceo-V1Beta.tgz"; DestDir: "{tmp}"; Flags: deleteafterinstall
 ; Installer script
 Source: "install.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
-; GUI Setup wizard
-Source: "setup-gui.ps1"; DestDir: "{tmp}"; Flags: deleteafterinstall
 ; Silent launcher (stays in app folder)
 Source: "start-beceo.bat"; DestDir: "{app}"
-; GUI Setup wizard (stays in app folder for launcher to use)
-Source: "setup-gui.ps1"; DestDir: "{app}"
 ; Icon
 Source: "beceo.ico"; DestDir: "{app}"
 ; Uninstall data removal script (stays in app folder)
 Source: "uninstall-data.ps1"; DestDir: "{app}"
 
 [Run]
-; Step 1: Run PowerShell installer silently in background
+; Run PowerShell installer (visible window so user can interact with beceo setup)
 Filename: "powershell.exe"; \
-    Parameters: "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""{tmp}\install.ps1"""; \
+    Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\install.ps1"""; \
     WorkingDir: "{tmp}"; \
     StatusMsg: "Installing BeCEO..."; \
-    Flags: waituntilterminated runhidden
-
-; Step 2: Launch GUI setup wizard (visible, separate process)
-Filename: "powershell.exe"; \
-    Parameters: "-ExecutionPolicy Bypass -File ""{app}\setup-gui.ps1"""; \
-    WorkingDir: "{app}"; \
-    StatusMsg: "Running setup wizard..."; \
     Flags: waituntilterminated
 
 [Icons]

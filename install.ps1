@@ -129,9 +129,26 @@ if ($npmExitCode -ne 0) {
 }
 Write-OK "BeCEO installed successfully"
 
+
+# Step 4: Initial setup
+Write-Step "Step 5: Initial Setup"
+Write-Host ""
+Write-Host "   Starting BeCEO setup wizard..." -ForegroundColor Yellow
+Write-Host "   Please follow the prompts to complete your configuration." -ForegroundColor Yellow
+Write-Host ""
+Start-Sleep -Seconds 2
+
+try {
+    # Launch beceo setup in a new window so this installer window can close independently
+    Start-Process "cmd" -ArgumentList "/k beceo setup"
+} catch {
+    Write-Host "   [WARN] Setup could not run. You can run it manually later with: beceo setup" -ForegroundColor Yellow
+}
+
 Write-Host ""
 Write-Host "  +==================================+" -ForegroundColor Green
 Write-Host "  |   Installation Complete!         |" -ForegroundColor Green
+Write-Host "  |                                  |" -ForegroundColor Green
 Write-Host "  +==================================+" -ForegroundColor Green
 Write-Host ""
 Start-Sleep -Seconds 2
