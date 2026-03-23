@@ -1,10 +1,10 @@
 #!/bin/bash
 # BeCEO macOS Installer
-# Usage: bash install.sh
+# Usage: curl -fsSL https://raw.githubusercontent.com/Tronlix/beceo-installer/main/mac/install.sh | bash
 
 set -e
 
-BECEO_TGZ="beceo-V1Beta.tgz"
+REPO="Tronlix/beceo-installer"
 NODE_MIN_VERSION=22
 
 # Colors
@@ -17,7 +17,7 @@ NC='\033[0m'
 step() { echo -e "\n${CYAN}>> $1${NC}"; }
 ok()   { echo -e "   ${GREEN}[OK]${NC} $1"; }
 warn() { echo -e "   ${YELLOW}[WARN]${NC} $1"; }
-fail() { echo -e "\n   ${RED}[ERROR]${NC} $1\n"; read -p "Press Enter to close..."; exit 1; }
+fail() { echo -e "\n   ${RED}[ERROR]${NC} $1\n"; exit 1; }
 
 clear
 echo ""
@@ -26,21 +26,28 @@ echo "  |        BeCEO Installer           |"
 echo "  +==================================+"
 echo ""
 
-# Step 1: Locate .tgz
-step "Step 1: Checking installation files"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TGZ_PATH="$SCRIPT_DIR/$BECEO_TGZ"
-if [ ! -f "$TGZ_PATH" ]; then
-    fail "Cannot find $BECEO_TGZ. Make sure it's in the same folder as install.sh"
+# Step 1: Download BeCEO package from latest release
+step "Step 1: Downloading BeCEO"
+TGZ_PATH="/tmp/beceo-install.tgz"
+LATEST_TGZ_URL=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
+    | grep "browser_download_url" \
+    | grep "\.tgz" \
+    | head -1 \
+    | cut -d '"' -f 4)
+
+if [ -z "$LATEST_TGZ_URL" ]; then
+    fail "Could not find BeCEO package in latest release. Please check https://github.com/$REPO/releases"
 fi
-ok "Found $BECEO_TGZ"
+
+echo "   Downloading from $LATEST_TGZ_URL..."
+curl -fsSL "$LATEST_TGZ_URL" -o "$TGZ_PATH"
+ok "Downloaded BeCEO package"
 
 # Step 2: Check Homebrew
 step "Step 2: Checking Homebrew"
 if ! command -v brew &>/dev/null; then
     echo "   Installing Homebrew (this may take a few minutes)..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    # Add brew to PATH for Apple Silicon
     if [ -f "/opt/homebrew/bin/brew" ]; then
         eval "$(/opt/homebrew/bin/brew shellenv)"
         echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
@@ -75,6 +82,7 @@ fi
 step "Step 4: Installing BeCEO"
 echo "   Running npm install (this may take a few minutes)..."
 npm install -g "$TGZ_PATH"
+rm -f "$TGZ_PATH"
 ok "BeCEO installed successfully"
 
 # Step 5: Initial setup

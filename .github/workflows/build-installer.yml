@@ -101,17 +101,16 @@ jobs:
             Download `BeCEO-Setup-*.exe` and double-click to install.
 
             ### macOS
-            1. Download `BeCEO-macOS-install.sh` and place it in the same folder as `beceo-V1Beta.tgz`
-            2. Open Terminal and run:
+            Open Terminal and run:
             ```bash
-            bash ~/Downloads/BeCEO-macOS-install.sh
+            curl -fsSL https://raw.githubusercontent.com/Tronlix/beceo-installer/main/mac/install.sh | bash
             ```
 
             > **Windows:** May show "Unknown Publisher" warning — click **More info → Run anyway**.
 
             **The installer will automatically:**
             - Install Homebrew / Node.js v22 (if not already installed)
-            - Install BeCEO
+            - Download and install BeCEO
             - Launch the initial setup wizard
           files: |
             artifacts/BeCEO-Setup-Windows/*.exe
