@@ -86,3 +86,21 @@ Run manually:
 ```
 beceo setup
 ```
+
+## Uninstall (macOS)
+
+To stop BeCEO and remove it from startup:
+```bash
+# Stop the service and remove Launch Agents
+beceo stop
+launchctl unload ~/Library/LaunchAgents/ai.openclaw.gateway.plist 2>/dev/null
+launchctl unload ~/Library/LaunchAgents/com.openclaw.beceo.plist 2>/dev/null
+rm -f ~/Library/LaunchAgents/ai.openclaw.gateway.plist
+rm -f ~/Library/LaunchAgents/com.openclaw.beceo.plist
+
+# Uninstall the npm package
+npm uninstall -g beceo
+
+# Optionally remove user data
+rm -rf ~/.openclaw ~/.beceo
+```
