@@ -139,8 +139,9 @@ Write-Host ""
 Start-Sleep -Seconds 2
 
 try {
-    # Launch GUI setup wizard (no CMD window)
-    Start-Process "powershell" -ArgumentList "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptDir\setup-gui.ps1`"" -Wait
+    # Launch GUI setup wizard (visible window)
+    $setupGui = Join-Path $scriptDir "setup-gui.ps1"
+    Start-Process "powershell" -ArgumentList "-ExecutionPolicy Bypass -File `"$setupGui`"" -Wait
 } catch {
     warn "Setup could not run. You can run it manually later with: beceo setup"
 }
