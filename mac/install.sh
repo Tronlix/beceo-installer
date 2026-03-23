@@ -82,12 +82,21 @@ else
 fi
 rm -f "$TGZ_PATH"
 
-# Step 5: Initial setup
-step "Step 5: Initial Setup"
-echo ""
-echo "   Installation complete! Now run the setup wizard:"
-echo ""
-echo "     beceo setup"
+# Step 5: Setup PATH
+step "Step 5: Setting up PATH"
+NPM_BIN=$(npm bin -g 2>/dev/null || npm prefix -g)/bin
+SHELL_RC=""
+if [ -f "$HOME/.zshrc" ]; then SHELL_RC="$HOME/.zshrc"
+elif [ -f "$HOME/.bashrc" ]; then SHELL_RC="$HOME/.bashrc"
+elif [ -f "$HOME/.bash_profile" ]; then SHELL_RC="$HOME/.bash_profile"
+fi
+
+if [ -n "$SHELL_RC" ] && ! grep -q "$NPM_BIN" "$SHELL_RC" 2>/dev/null; then
+    echo "export PATH=\"$NPM_BIN:\$PATH\"" >> "$SHELL_RC"
+    ok "Added $NPM_BIN to $SHELL_RC"
+fi
+export PATH="$NPM_BIN:$PATH"
+
 echo ""
 echo "  +==================================+"
 echo "  |   Installation Complete! 🎉      |"
@@ -97,5 +106,8 @@ echo "  |     beceo setup                  |"
 echo "  |                                  |"
 echo "  |  Then start BeCEO with:          |"
 echo "  |     beceo start                  |"
+echo "  |                                  |"
+echo "  |  Note: Open a NEW terminal or    |"
+echo "  |  run: source ~/.zshrc            |"
 echo "  +==================================+"
 echo ""
