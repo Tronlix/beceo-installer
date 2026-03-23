@@ -26,21 +26,13 @@ echo "  |        BeCEO Installer           |"
 echo "  +==================================+"
 echo ""
 
-# Step 1: Download BeCEO package from latest release
+# Step 1: Download BeCEO package
 step "Step 1: Downloading BeCEO"
 TGZ_PATH="/tmp/beceo-install.tgz"
-LATEST_TGZ_URL=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
-    | grep "browser_download_url" \
-    | grep "\.tgz" \
-    | head -1 \
-    | cut -d '"' -f 4)
+TGZ_URL="https://raw.githubusercontent.com/$REPO/main/beceo-V1Beta.tgz"
 
-if [ -z "$LATEST_TGZ_URL" ]; then
-    fail "Could not find BeCEO package in latest release. Please check https://github.com/$REPO/releases"
-fi
-
-echo "   Downloading from $LATEST_TGZ_URL..."
-curl -fsSL "$LATEST_TGZ_URL" -o "$TGZ_PATH"
+echo "   Downloading BeCEO package..."
+curl -fsSL "$TGZ_URL" -o "$TGZ_PATH" || fail "Could not download BeCEO package. Please check your internet connection."
 ok "Downloaded BeCEO package"
 
 # Step 2: Check Homebrew
