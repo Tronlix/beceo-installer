@@ -65,3 +65,19 @@ Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\u
 WelcomeLabel1=Welcome to BeCEO Setup
 WelcomeLabel2=This wizard will guide you through the installation of BeCEO AI Assistant.%n%nNode.js v22 will be automatically installed if needed. Please make sure your computer is connected to the internet.%n%nClick Next to continue.
 FinishedLabel=BeCEO has been successfully installed!%n%nYou can now launch BeCEO from the desktop shortcut or Start Menu.%n%nBeCEO will run silently in the background when started.
+
+[Code]
+function InitializeSetup(): Boolean;
+begin
+  if not IsAdminInstallMode() then
+  begin
+    MsgBox(
+      'BeCEO requires administrator privileges to install.' + #13#10 +
+      'Please right-click the installer and select "Run as administrator".',
+      mbError, MB_OK
+    );
+    Result := False;
+  end
+  else
+    Result := True;
+end;
