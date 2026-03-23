@@ -73,13 +73,14 @@ fi
 # Step 4: Install BeCEO
 step "Step 4: Installing BeCEO"
 echo "   Running npm install (this may take a few minutes)..."
-npm install -g "$TGZ_PATH" </dev/null
-NPM_EXIT=$?
-rm -f "$TGZ_PATH"
-if [ $NPM_EXIT -ne 0 ]; then
-    fail "npm install failed (exit code $NPM_EXIT). Please check your Node.js installation or network connection."
+if npm install -g "$TGZ_PATH" </dev/null 2>/dev/null; then
+    ok "BeCEO installed successfully"
+else
+    echo "   Retrying with sudo..."
+    sudo npm install -g "$TGZ_PATH" </dev/null || fail "npm install failed. Please check your Node.js installation or network connection."
+    ok "BeCEO installed successfully"
 fi
-ok "BeCEO installed successfully"
+rm -f "$TGZ_PATH"
 
 # Step 5: Initial setup
 step "Step 5: Initial Setup"
