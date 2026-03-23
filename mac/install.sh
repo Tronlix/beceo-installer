@@ -73,25 +73,28 @@ fi
 # Step 4: Install BeCEO
 step "Step 4: Installing BeCEO"
 echo "   Running npm install (this may take a few minutes)..."
-npm install -g "$TGZ_PATH"
+npm install -g "$TGZ_PATH" </dev/null
+NPM_EXIT=$?
 rm -f "$TGZ_PATH"
+if [ $NPM_EXIT -ne 0 ]; then
+    fail "npm install failed (exit code $NPM_EXIT). Please check your Node.js installation or network connection."
+fi
 ok "BeCEO installed successfully"
 
 # Step 5: Initial setup
 step "Step 5: Initial Setup"
 echo ""
-echo "   Starting BeCEO setup wizard..."
-echo "   Please follow the prompts to complete your configuration."
+echo "   Installation complete! Now run the setup wizard:"
 echo ""
-sleep 1
-
-beceo setup || warn "Setup failed or was skipped. Run 'beceo setup' manually to configure."
-
+echo "     beceo setup"
 echo ""
 echo "  +==================================+"
 echo "  |   Installation Complete! 🎉      |"
 echo "  |                                  |"
-echo "  |  To start BeCEO, run:            |"
+echo "  |  Run the following to configure: |"
+echo "  |     beceo setup                  |"
+echo "  |                                  |"
+echo "  |  Then start BeCEO with:          |"
 echo "  |     beceo start                  |"
 echo "  +==================================+"
 echo ""
