@@ -101,13 +101,23 @@ echo ""
 echo "  +==================================+"
 echo "  |   Installation Complete! 🎉      |"
 echo "  |                                  |"
-echo "  |  Run the following to configure: |"
-echo "  |     beceo setup                  |"
-echo "  |                                  |"
-echo "  |  Then start BeCEO with:          |"
-echo "  |     beceo start                  |"
-echo "  |                                  |"
-echo "  |  Note: Open a NEW terminal or    |"
-echo "  |  run: source ~/.zshrc            |"
+echo "  |  Starting setup wizard...        |"
 echo "  +==================================+"
+echo ""
+sleep 1
+
+# Source shell config so beceo is available immediately
+if [ -f "$HOME/.zshrc" ]; then source "$HOME/.zshrc" 2>/dev/null || true
+elif [ -f "$HOME/.bash_profile" ]; then source "$HOME/.bash_profile" 2>/dev/null || true
+fi
+
+# Run setup
+if command -v beceo &>/dev/null; then
+    beceo setup
+else
+    "$NPM_BIN/beceo" setup
+fi
+
+echo ""
+echo "  Setup complete! Run 'beceo start' to launch BeCEO."
 echo ""
