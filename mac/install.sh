@@ -106,17 +106,19 @@ echo "  +==================================+"
 echo ""
 sleep 1
 
-# Source shell config so beceo is available immediately
-if [ -f "$HOME/.zshrc" ]; then source "$HOME/.zshrc" 2>/dev/null || true
-elif [ -f "$HOME/.bash_profile" ]; then source "$HOME/.bash_profile" 2>/dev/null || true
+# Find beceo binary directly
+BECEO_BIN="$NPM_BIN/beceo"
+if [ ! -f "$BECEO_BIN" ]; then
+    BECEO_BIN=$(which beceo 2>/dev/null || true)
 fi
 
-# Run setup
-if command -v beceo &>/dev/null; then
-    beceo setup
-else
-    "$NPM_BIN/beceo" setup
+if [ -z "$BECEO_BIN" ] || [ ! -f "$BECEO_BIN" ]; then
+    echo "   Could not locate beceo binary. Please run 'beceo setup' manually in a new terminal."
+    exit 0
 fi
+
+echo "   Running: $BECEO_BIN setup"
+"$BECEO_BIN" setup
 
 echo ""
 echo "  Setup complete! Run 'beceo start' to launch BeCEO."
