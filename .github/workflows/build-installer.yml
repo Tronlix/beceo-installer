@@ -55,22 +55,22 @@ jobs:
           path: version.txt
 
   build-macos:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build DMG
+      - name: Prepare macOS installer package
         run: |
-          chmod +x mac/build-dmg.sh
-          chmod +x mac/install.command
-          ./mac/build-dmg.sh
+          mkdir -p output
+          cp mac/install.sh output/BeCEO-macOS-install.sh
+          chmod +x output/BeCEO-macOS-install.sh
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
           name: BeCEO-Setup-macOS
-          path: output/*.dmg
+          path: output/BeCEO-macOS-install.sh
           retention-days: 30
 
   release:
@@ -101,14 +101,16 @@ jobs:
             Download `BeCEO-Setup-*.exe` and double-click to install.
 
             ### macOS
-            Download `BeCEO-*.dmg`, open it, and double-click **Install BeCEO.command**.
+            1. Download `BeCEO-macOS-install.sh` and place it in the same folder as `beceo-V1Beta.tgz`
+            2. Open Terminal and run:
+            ```bash
+            bash ~/Downloads/BeCEO-macOS-install.sh
+            ```
 
             > **Windows:** May show "Unknown Publisher" warning — click **More info → Run anyway**.
-            > **macOS:** May show "unidentified developer" warning — right-click → **Open** to proceed.
 
             **The installer will automatically:**
-            - Install Node.js v22 (if not already installed)
-            - Install Git (if not already installed)
+            - Install Homebrew / Node.js v22 (if not already installed)
             - Install BeCEO
             - Launch the initial setup wizard
           files: |
